@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import AuthActions from '~/store/ducks/auth';
 import { Container, SignForm, Image } from '../styles';
 import Button from '~/styles/components/Button';
 import Logo from '~/assets/discord.png';
 
-export default class SignIn extends Component {
+console.log('teste');
+class SignIn extends Component {
+  static propTypes = {
+    signInRequest: PropTypes.func.isRequired,
+  }
+
   state = {
     email: '',
     password: '',
@@ -12,7 +20,10 @@ export default class SignIn extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    console.log('teste');
     const { email, password } = this.state;
+    const { signInRequest } = this.props;
+    signInRequest(email, password);
   }
 
   handleInputChange = (e) => {
@@ -32,9 +43,13 @@ export default class SignIn extends Component {
           <input type="email" name="email" onChange={this.handleInputChange} value={email} />
           <span>SENHA</span>
           <input type="password" name="password" onChange={this.handleInputChange} value={password} />
-          <Button size="big" type="submit">Entrar</Button>
+          <Button size="big" onClick={this.handleSubmit} type="submit">Entrar</Button>
         </SignForm>
       </Container>
     );
   }
 }
+
+
+const mapDispatchToProps = (dispatch) => bindActionCreators(AuthActions, dispatch);
+export default connect(null, mapDispatchToProps)(SignIn);
