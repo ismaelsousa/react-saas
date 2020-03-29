@@ -15,12 +15,17 @@ class TeamSwitcher extends Component {
     selectTeam: PropTypes.func.isRequired,
     openTeamModal: PropTypes.func.isRequired,
     closeTeamModal: PropTypes.func.isRequired,
+    createTeamRequest: PropTypes.func.isRequired,
     teams: PropTypes.shape({
       data: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
       })),
     }).isRequired,
+  }
+
+  state = {
+    newTeam: '',
   }
 
   componentDidMount() {
@@ -34,15 +39,26 @@ class TeamSwitcher extends Component {
     selectTeam(team);
   }
 
+  handleCreateTeam = (e) => {
+    e.preventDefault();
+    const { createTeamRequest } = this.props;
+    const { newTeam } = this.state;
+    createTeamRequest(newTeam);
+  }
+
   render() {
     const { teams, openTeamModal, closeTeamModal } = this.props;
+    const { newTeam } = this.state;
     console.log(teams);
     return (
       <Container>
         <TeamList>
           {teams.data.map((team) => (
             <Team key={team.id} onClick={() => this.handleSelectTeam(team)}>
-              <img src={`https://ui-avatars.com/api?font-size=0.33&background=7159c1&color=fff&name=${team.name}`} alt="imagem" />
+              <img
+                src={`https://ui-avatars.com/api?font-size=0.33&background=7159c1&color=fff&name=${team.name}`}
+                alt="imagem"
+              />
             </Team>
           ))}
 
@@ -51,10 +67,15 @@ class TeamSwitcher extends Component {
           {teams.teamModalOpen && (
             <Modal>
               <h1>Criar time</h1>
-              <form onSubmit={() => {}}>
+              <form onSubmit={this.handleCreateTeam}>
 
                 <span>Nome</span>
-                <input type="text" name="newTeam" />
+                <input
+                  type="text"
+                  name="newTeam"
+                  value={newTeam}
+                  onChange={(e) => this.setState({ newTeam: e.target.value })}
+                />
                 <Button size="big" type="submit">Salvar</Button>
                 <Button size="small" onClick={closeTeamModal} color="gray">Cancelar</Button>
               </form>
