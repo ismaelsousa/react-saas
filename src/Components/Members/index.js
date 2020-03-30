@@ -10,19 +10,27 @@ import Button from '~/styles/components/Button';
 class Members extends Component {
   static propTypes = {
     closeMembersModal: PropTypes.func.isRequired,
+    getMembersRequest: PropTypes.func.isRequired,
+  }
+
+  componentDidMount() {
+    const { getMembersRequest } = this.props;
+    getMembersRequest();
   }
 
   render() {
-    const { closeMembersModal } = this.props;
+    const { closeMembersModal, members } = this.props;
     return (
       <Modal size="big">
         <h1>Membros</h1>
         <form action="">
           <MembersList>
-            <li>
-              <strong>ismael</strong>
 
-            </li>
+            {members.data.map((member) => (
+              <li key={member.id}>
+                <strong>{member.user.name}</strong>
+              </li>
+            ))}
           </MembersList>
           <Button onClick={closeMembersModal} filled={false} color="gray">CAncelar</Button>
         </form>
