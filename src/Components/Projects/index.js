@@ -12,6 +12,9 @@ import Button from '~/styles/components/Button';
 import Modal from '~/Components/Modal';
 import Members from '~/Components/Members';
 
+
+import Can from '~/Components/Can';
+
 class Projects extends Component {
   static propTypes ={
     activeTeam: PropTypes.shape({
@@ -70,7 +73,10 @@ class Projects extends Component {
         <header>
           <h1>{activeTeam.name}</h1>
           <div>
-            <Button onClick={openProjectModal}>+ Novo</Button>
+            <Can checkPermission="projects_create">
+              <Button onClick={openProjectModal}>+ Novo</Button>
+            </Can>
+
             <Button onClick={openMembersModal}>Membros</Button>
           </div>
         </header>

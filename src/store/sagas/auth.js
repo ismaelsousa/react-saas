@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import { actions as toastrActions } from 'react-redux-toastr';
 import api from '~/services/api';
@@ -43,4 +43,18 @@ export function* signOut() {
   localStorage.removeItem('@Omni:token');
   localStorage.removeItem('@Omni:team');
   yield put(push('/signin'));
+}
+
+
+export function* getPermissions() {
+  const team = yield select((state) => state.teams.active);
+  const signedIn = yield select((state) => state.auth.signedIn);
+
+  if (signedIn === false || !team) return;
+
+  const response = yield call(api.get, 'permissions');
+
+  const { roles, permissions } = response.data;
+
+  yield put(AuthActions.getPermissionsSuccess(roles, permissions));
 }
