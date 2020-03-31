@@ -13,3 +13,22 @@ export function* getMembers() {
     console.log(error);
   }
 }
+
+export function* updateMember({ id, roles }) {
+  try {
+    yield call(api.put, `/members/${id}`, { roles: roles.map((role) => role.id) });
+
+    yield put(toastrActions.add({
+      type: 'success',
+      title: 'Membro atualizado',
+
+    }));
+  } catch (error) {
+    console.log(error);
+    yield put(toastrActions.add({
+      type: 'error',
+      title: 'Falha ao atualizar',
+      message: 'Verifique e tente novamente!',
+    }));
+  }
+}
