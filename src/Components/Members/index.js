@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { MembersList } from './styles';
+import { MembersList, Invite } from './styles';
 import MembersActions from '~/store/ducks/members';
 import Modal from '~/Components/Modal';
 import Button from '~/styles/components/Button';
@@ -13,10 +13,14 @@ class Members extends Component {
   static propTypes = {
     closeMembersModal: PropTypes.func.isRequired,
     getMembersRequest: PropTypes.func.isRequired,
+    updateMemberRequest: PropTypes.func.isRequired,
+    inviteMemberRequest: PropTypes.func.isRequired,
   }
 
   state = {
     roles: [],
+    invite: '',
+
   }
 
   async componentDidMount() {
@@ -31,12 +35,32 @@ class Members extends Component {
     updateMemberRequest(id, roles);
   }
 
+  handleInputChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleInvite = (e) => {
+    e.preventDefault();
+
+    const { inviteMemberRequest } = this.props;
+    const { invite } = this.state;
+    inviteMemberRequest(invite);
+  }
+
   render() {
     const { closeMembersModal, members } = this.props;
-    const { roles } = this.state;
+    const { roles, invite } = this.state;
     return (
       <Modal size="big">
         <h1>Membros</h1>
+
+        <Invite
+          onSubmit={this.handleInvite}
+
+        >
+          <input type="text" onChange={this.handleInputChange} name="invite" placeholder="Convidar para o time" value={invite} />
+          <Button type="submit">Enviar</Button>
+        </Invite>
         <form action="">
           <MembersList>
 
